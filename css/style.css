@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'IBM Plex Mono', monospace;
 }
 
 body {
@@ -29,9 +30,10 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     font-size: 18px;
     font-weight: 600;
+    cursor: pointer;
 }
 
 .logo svg {
@@ -53,6 +55,7 @@ body {
     align-items: center;
     gap: 8px;
     transition: background 0.3s;
+    margin-bottom: 15px;
 }
 
 .add-task-btn:hover {
@@ -77,7 +80,7 @@ body {
     align-items: center;
     gap: 8px;
     transition: background 0.3s;
-    margin-top: 10px;
+    margin-bottom: 30px;
 }
 
 .calendar-btn:hover {
@@ -89,11 +92,20 @@ body {
     height: 18px;
 }
 
-.work-btn {
-   background: rgba(255, 255, 255, 0.2);
+.sidebar h3 {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.work-btn, .personal-btn {
+    background: transparent;
     border: none;
     color: white;
-    padding: 12px 20px;
+    padding: 10px 20px;
     border-radius: 8px;
     cursor: pointer;
     width: 100%;
@@ -101,39 +113,21 @@ body {
     font-weight: 500;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     transition: background 0.3s;
+    margin-bottom: 8px;
+    justify-content: flex-start;
 }
 
-.work-btn:hover {
-background: rgba(255, 255, 255, 0.3);}
-
-.work-btn svg {
-    font-size: 20px;
-}
-
-.personal-btn {
+.work-btn:hover, .personal-btn:hover {
     background: rgba(255, 255, 255, 0.15);
-    border: none;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 14px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background 0.3s;
-    margin-top: 10px;
 }
 
-.personal-btn:hover {
+.work-btn.active, .personal-btn.active {
     background: rgba(255, 255, 255, 0.25);
 }
 
-.personal-btn svg {
+.work-btn svg, .personal-btn svg {
     width: 18px;
     height: 18px;
 }
@@ -159,6 +153,7 @@ background: rgba(255, 255, 255, 0.3);}
     font-weight: 600;
     color: #333;
     margin: 0;
+    cursor: pointer;
 }
 
 .filter-container {
@@ -318,6 +313,13 @@ background: rgba(255, 255, 255, 0.3);}
     align-items: flex-start;
     gap: 15px;
     animation: fadeIn 0.3s ease-out;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.task-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 @keyframes fadeIn {
@@ -360,6 +362,7 @@ background: rgba(255, 255, 255, 0.3);}
     gap: 15px;
     font-size: 13px;
     color: #888;
+    flex-wrap: wrap;
 }
 
 .task-type {
@@ -416,18 +419,18 @@ background: rgba(255, 255, 255, 0.3);}
     font-size: 16px;
 }
 
-/* Calendar View Styles */
+/* Calendar View Styles - FIXED */
 .calendar-view {
     background: white;
     border-radius: 12px;
     padding: 25px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    display: none;
     animation: fadeIn 0.3s ease-out;
+    display: none; /* Hidden by default */
 }
 
 .calendar-view.active {
-    display: block;
+    display: block !important; /* Show when active */
 }
 
 .calendar-header {
@@ -496,6 +499,7 @@ background: rgba(255, 255, 255, 0.3);}
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+    min-height: 80px;
 }
 
 .calendar-day:hover {
@@ -530,14 +534,6 @@ background: rgba(255, 255, 255, 0.3);}
     margin-bottom: 4px;
 }
 
-.task-indicator {
-    width: 6px;
-    height: 6px;
-    background: #ff9800;
-    border-radius: 50%;
-    margin-top: 2px;
-}
-
 .task-count {
     font-size: 10px;
     color: #ff9800;
@@ -557,7 +553,7 @@ background: rgba(255, 255, 255, 0.3);}
     padding: 30px;
     overflow-y: auto;
     transition: right 0.3s ease-out;
-    z-index: 999;
+    z-index: 1000;
 }
 
 .task-detail-panel.active {
@@ -592,6 +588,7 @@ background: rgba(255, 255, 255, 0.3);}
     justify-content: center;
     border-radius: 50%;
     transition: all 0.3s;
+    line-height: 1;
 }
 
 .close-detail-btn:hover {
@@ -700,27 +697,4 @@ background: rgba(255, 255, 255, 0.3);}
 .delete-task-btn:hover {
     background: #d32f2f;
     box-shadow: 0 4px 8px rgba(244, 67, 54, 0.4);
-}
-
-/* TASK DETAIL PANEL */
-.task-detail {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 20px;
-  width: 300px;
-  border-radius: 8px;
-  z-index: 10;
-  display: none;
-}
-
-.task-detail.active {
-  display: block;
-}
-
-.task-detail button {
-  margin-top: 20px;
-  padding: 8px 12px;
 }

@@ -1,4 +1,5 @@
 // DOM Elements
+const homeBtn = document.getElementById('homeBtn');
 const addTaskBtn = document.getElementById('addTaskBtn');
 const taskForm = document.getElementById('taskForm');
 const todoForm = document.getElementById('todoForm');
@@ -17,14 +18,16 @@ const closeDetailBtn = document.getElementById('closeDetailBtn');
 const detailName = document.getElementById('detailName');
 const detailDate = document.getElementById('detailDate');
 const detailStatus = document.getElementById('detailStatus');
-let selectedTaskId = null;
-
+const workBtn = document.getElementById('workBtn');
+const personalBtn = document.getElementById('personalBtn');
 
 // Tasks array
 let tasks = [];
 let currentFilter = 'all';
 let currentDate = new Date();
 let viewMode = 'list'; // 'list' or 'calendar'
+let currentCategory = 'all'; // all | Work | Personal
+let selectedTaskId = null;
 
 // Load tasks from localStorage on page load
 window.addEventListener('DOMContentLoaded', () => {
@@ -46,6 +49,31 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+homeBtn.addEventListener('click', () => {
+    // reset state
+    currentCategory = 'all';
+    currentFilter = 'all';
+    viewMode = 'list';
+
+    // reset filter dropdown
+    filterSelect.value = 'all';
+
+    // tutup calendar
+    calendarView.style.display = 'none';
+    calendarView.classList.remove('active');
+
+    // tampilkan task list
+    tasksList.style.display = 'grid';
+
+    // tutup form & detail
+    closeAllPanels();
+
+    // render ulang semua task
+    renderTasks();
+
+    // reset sidebar active
+    sidebarMenuItems.forEach(i => i.classList.remove('active'));
+});
 
 // Filter change event
 filterSelect.addEventListener('change', (e) => {
@@ -55,38 +83,37 @@ filterSelect.addEventListener('change', (e) => {
 
 // Calendar button click
 calendarBtn.addEventListener('click', () => {
+    closeAllPanels(); // aman, nggak ganggu apa-apa
+
     if (viewMode === 'list') {
         viewMode = 'calendar';
+
         tasksList.style.display = 'none';
+
+        calendarView.style.display = 'block';   // ⬅️ TAMBAH INI
         calendarView.classList.add('active');
-        calendarBtn.classList.add('active');
-        calendarBtn.innerHTML = `
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            Calendar
-        `;
+
         renderCalendar();
     } else {
         viewMode = 'list';
+
         tasksList.style.display = 'grid';
+
+        calendarView.style.display = 'none';    // ⬅️ TAMBAH INI
         calendarView.classList.remove('active');
-        calendarBtn.classList.remove('active');
-        calendarBtn.innerHTML = `
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-            </svg>
-            Calendar
-        `;
     }
 });
 
+// Calendar navigation
+prevMonthBtn.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar();
+});
+
+nextMonthBtn.addEventListener('click', () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar();
+});
 // Calendar navigation
 prevMonthBtn.addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
@@ -184,11 +211,18 @@ function renderTasks() {
     // Filter tasks based on current filter
     let filteredTasks = tasks;
     
-    if (currentFilter === 'completed') {
-        filteredTasks = tasks.filter(task => task.completed);
-    } else if (currentFilter === 'uncompleted') {
-        filteredTasks = tasks.filter(task => !task.completed);
-    }
+    // filter category (Work / Personal)
+if (currentCategory !== 'all') {
+    filteredTasks = filteredTasks.filter(
+        task => task.category === currentCategory
+    );
+}
+    // filter status
+if (currentFilter === 'completed') {
+    filteredTasks = filteredTasks.filter(task => task.completed);
+} else if (currentFilter === 'uncompleted') {
+    filteredTasks = filteredTasks.filter(task => !task.completed);
+}
     
     if (filteredTasks.length === 0) {
         let emptyMessage = 'Belum ada tugas. Klik "Add New Tasks" untuk menambahkan.';
@@ -214,7 +248,7 @@ function renderTasks() {
         <div class="task-item ${task.completed ? 'completed' : ''}"
      data-id="${task.id}"
      onclick="openTaskDetail(${task.id})">
-            <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
+            <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onclick="event.stopPropagation()" onchange="toggleTask(${task.id})">
             
             <div class="task-details">
                 <div class="task-name">${task.name}</div>
@@ -303,43 +337,61 @@ function renderCalendar() {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     
-    // Set calendar title
+    // Set title
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                        'July', 'August', 'September', 'October', 'November', 'December'];
+        'July', 'August', 'September', 'October', 'November', 'December'];
     calendarTitle.textContent = `${monthNames[month]} ${year}`;
+    
+    // Clear previous days
+    calendarDays.innerHTML = '';
+    
+    // Add day headers
+    const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    dayHeaders.forEach(day => {
+        const header = document.createElement('div');
+        header.className = 'calendar-day-header';
+        header.textContent = day;
+        calendarDays.appendChild(header);
+    });
     
     // Get first day of month and number of days
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const daysInPrevMonth = new Date(year, month, 0).getDate();
     
-    // Clear calendar
-    calendarDays.innerHTML = '';
-    
-    // Add previous month's days
+    // Add days from previous month
     for (let i = firstDay - 1; i >= 0; i--) {
         const day = daysInPrevMonth - i;
-        const dayElement = createDayElement(day, true, year, month - 1);
-        calendarDays.appendChild(dayElement);
+        calendarDays.appendChild(createDayElement(day, true, year, month - 1));
     }
     
-    // Add current month's days
+    // Add days of current month
     const today = new Date();
     for (let day = 1; day <= daysInMonth; day++) {
-        const isToday = day === today.getDate() && 
-                       month === today.getMonth() && 
-                       year === today.getFullYear();
-        const dayElement = createDayElement(day, false, year, month, isToday);
-        calendarDays.appendChild(dayElement);
+        const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+        calendarDays.appendChild(createDayElement(day, false, year, month, isToday));
     }
     
-    // Add next month's days
-    const totalCells = calendarDays.children.length;
-    const remainingCells = 42 - totalCells; // 6 rows x 7 days
+    // Add days from next month
+    const totalCells = calendarDays.children.length - 7; // subtract day headers
+    const remainingCells = 42 - totalCells; // 6 rows * 7 days
     for (let day = 1; day <= remainingCells; day++) {
-        const dayElement = createDayElement(day, true, year, month + 1);
-        calendarDays.appendChild(dayElement);
+        calendarDays.appendChild(createDayElement(day, true, year, month + 1));
     }
+}
+
+// Show tasks for specific date
+function showTasksForDate(dateString, tasksForDay) {
+    if (tasksForDay.length === 0) {
+        alert(`No tasks for ${formatDate(dateString)}`);
+        return;
+    }
+    
+    const taskList = tasksForDay.map(task => 
+        `• ${task.name}${task.completed ? ' ✓' : ''}`
+    ).join('\n');
+    
+    alert(`Tasks for ${formatDate(dateString)}:\n\n${taskList}`);
 }
 
 // Create day element
@@ -403,15 +455,37 @@ function openTaskDetail(id) {
 
     selectedTaskId = id;
 
-    detailName.textContent = task.name;
-    detailDate.textContent = task.dueDate
+    document.getElementById('detailName').textContent = task.name;
+    document.getElementById('detailDesc').textContent = task.description || '-';
+    document.getElementById('detailCategory').textContent = task.category || '-';
+    document.getElementById('detailDate').textContent = task.dueDate
         ? formatDate(task.dueDate)
         : '-';
-
-    detailStatus.textContent = task.completed
+    document.getElementById('detailStatus').textContent = task.completed
         ? 'Completed'
         : 'Uncompleted';
+    document.getElementById('detailCreated').textContent =
+        formatDateTime(task.createdAt);
 
     taskDetailPanel.classList.add('active');
     formOverlay.classList.add('active');
+
+    console.log(task);
+
 }
+
+workBtn.addEventListener('click', () => {
+    currentCategory = 'Work';
+    renderTasks();
+});
+
+personalBtn.addEventListener('click', () => {
+    currentCategory = 'Personal';
+    renderTasks();
+});
+document.querySelector('.header').addEventListener('click', () => {
+    currentCategory = 'all';
+    renderTasks();
+});
+
+
