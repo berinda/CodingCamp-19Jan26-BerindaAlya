@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    <path d="M9 12l2 2 4-4"/>
+                </svg>
+                <span>To-Do List</span>
+            </div>
+            
+            <button class="add-task-btn" id="addTaskBtn">
+                <span>+</span> Add New Tasks
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1 class="header">Today</h1>
+
+            <!-- Task Form (Hidden by default) -->
+            <div class="task-form" id="taskForm">
+                <h2 class="form-title">Add New Task</h2>
+                
+                <form id="todoForm">
+                    <div class="form-group">
+                        <label for="taskName">Task:</label>
+                        <input type="text" id="taskName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taskDesc">Description:</label>
+                        <textarea id="taskDesc"></textarea>
+                    </div>
+
+                    <!-- <div class="form-group">
+                        <label for="taskType">Type</label>
+                        <select id="taskType">
+                            <option value="">Select Type</option>
+                            <option value="Work">Work</option>
+                            <option value="Personal">Personal</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div> -->
+
+                    <div class="form-group">
+                        <label for="dueDate">Due Date:</label>
+                        <input type="date" id="dueDate">
+                    </div>
+
+                    <button type="submit" class="save-btn">Save</button>
+                    <div style="clear: both;"></div>
+                </form>
+            </div>
+
+            <!-- Tasks List -->
+            <div class="tasks-list" id="tasksList"></div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
