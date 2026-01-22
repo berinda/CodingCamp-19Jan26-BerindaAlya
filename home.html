@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
+    <!-- IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -104,6 +108,65 @@
 
             <!-- Tasks List -->
             <div class="tasks-list" id="tasksList"></div>
+
+           <div class="task-detail-panel" id="taskDetailPanel">
+                <div class="detail-header">
+                    <h2 class="detail-title">Task Details</h2>
+                    <button class="close-detail-btn" id="closeDetailBtn">×</button>
+                </div>
+                
+                <div class="detail-content">
+                    <div class="detail-section">
+                        <label>Task Name:</label>
+                        <h3 class="detail-task-name" id="detailTaskName"></h3>
+                    </div>
+
+                    <div class="detail-section">
+                        <label>Description:</label>
+                        <p class="detail-task-desc" id="detailTaskDesc"></p>
+                    </div>
+
+                    <div class="detail-section">
+                        <label>Category:</label>
+                        <span class="detail-category" id="detailCategory"></span>
+                    </div>
+
+                    <div class="detail-section">
+                        <label>Due Date:</label>
+                        <p class="detail-due-date" id="detailDueDate"></p>
+                    </div>
+
+                    <div class="detail-section">
+                        <label>Status:</label>
+                        <p class="detail-status" id="detailStatus"></p>
+                    </div>
+
+                    <div class="detail-section">
+                        <label>Created At:</label>
+                        <p class="detail-created" id="detailCreated"></p>
+                    </div>
+                </div>
+
+                <div class="detail-actions">
+                    <button class="delete-task-btn" id="deleteTaskDetailBtn">Delete Task</button>
+                </div>
+            </div>
+
+            <!-- TASK DETAIL PANEL -->
+            <div id="taskDetailPanel" class="task-detail">
+                 <h3>Task Detail</h3>
+
+                <p><strong>Task:</strong></p>
+                <p id="detailName"></p>
+
+                <p><strong>Due Date:</strong></p>
+                 <p id="detailDate"></p>
+
+                <p><strong>Status:</strong></p>
+                <p id="detailStatus"></p>
+
+                <button id="closeDetailBtn">Close</button>
+            </div>
 
             <!-- Calendar View (Hidden by default) -->
             <div class="calendar-view" id="calendarView">

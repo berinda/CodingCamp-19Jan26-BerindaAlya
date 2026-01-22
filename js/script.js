@@ -11,7 +11,14 @@ const calendarTitle = document.getElementById('calendarTitle');
 const prevMonthBtn = document.getElementById('prevMonth');
 const nextMonthBtn = document.getElementById('nextMonth');
 const formOverlay = document.getElementById('formOverlay');
-const workBtn = document.getElementById('workBtn');
+const sidebarMenuItems = document.querySelectorAll('.sidebar-menu-item');
+const taskDetailPanel = document.getElementById('taskDetailPanel');
+const closeDetailBtn = document.getElementById('closeDetailBtn');
+const detailName = document.getElementById('detailName');
+const detailDate = document.getElementById('detailDate');
+const detailStatus = document.getElementById('detailStatus');
+let selectedTaskId = null;
+
 
 // Tasks array
 let tasks = [];
@@ -23,6 +30,21 @@ let viewMode = 'list'; // 'list' or 'calendar'
 window.addEventListener('DOMContentLoaded', () => {
     loadTasks();
     renderTasks();
+    
+    // Set first menu item (List) as active by default
+    if (sidebarMenuItems.length > 0) {
+        sidebarMenuItems[0].classList.add('active');
+    }
+    
+    // Add click event to sidebar menu items
+    sidebarMenuItems.forEach(item => {
+        item.addEventListener('click', () => {
+            // Remove active from all items
+            sidebarMenuItems.forEach(i => i.classList.remove('active'));
+            // Add active to clicked item
+            item.classList.add('active');
+        });
+    });
 });
 
 // Filter change event
@@ -37,13 +59,7 @@ calendarBtn.addEventListener('click', () => {
         viewMode = 'calendar';
         tasksList.style.display = 'none';
         calendarView.classList.add('active');
-        calendarBtn.textContent = '📋 List View';
-        calendarBtn.prepend(document.createTextNode(''));
-        renderCalendar();
-    } else {
-        viewMode = 'list';
-        tasksList.style.display = 'grid';
-        calendarView.classList.remove('active');
+        calendarBtn.classList.add('active');
         calendarBtn.innerHTML = `
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -51,7 +67,22 @@ calendarBtn.addEventListener('click', () => {
                 <line x1="8" y1="2" x2="8" y2="6"></line>
                 <line x1="3" y1="10" x2="21" y2="10"></line>
             </svg>
-            Calendar View
+            Calendar
+        `;
+        renderCalendar();
+    } else {
+        viewMode = 'list';
+        tasksList.style.display = 'grid';
+        calendarView.classList.remove('active');
+        calendarBtn.classList.remove('active');
+        calendarBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Calendar
         `;
     }
 });
@@ -69,21 +100,49 @@ nextMonthBtn.addEventListener('click', () => {
 
 // Toggle task form
 addTaskBtn.addEventListener('click', () => {
-    taskForm.classList.toggle('active');
-    formOverlay.classList.toggle('active');
-    
-    // Reset form if closing
-    if (!taskForm.classList.contains('active')) {
-        todoForm.reset();
-    }
+    taskForm.classList.add('active');
+    formOverlay.classList.add('active');
 });
+
+function closeAllPanels() {
+  taskForm.classList.remove('active');
+  formOverlay.classList.remove('active');
+
+  if (taskDetailPanel) {
+    taskDetailPanel.classList.remove('active');
+  }
+
+  selectedTaskId = null;
+}
 
 // Close form when clicking overlay
 formOverlay.addEventListener('click', () => {
-    taskForm.classList.remove('active');
-    formOverlay.classList.remove('active');
+    closeAllPanels();
     todoForm.reset();
 });
+
+// Close detail panel
+if (typeof closeDetailBtn !== 'undefined' && closeDetailBtn) {
+    closeDetailBtn.addEventListener('click', () => {
+        taskDetailPanel.classList.remove('active');
+        formOverlay.classList.remove('active');
+        selectedTaskId = null;
+    });
+}
+
+// Delete from detail panel
+if (typeof deleteTaskBtn !== 'undefined' && deleteTaskBtn) {
+    deleteTaskBtn.addEventListener('click', () => {
+        if (selectedTaskId && confirm('Apakah Anda yakin ingin menghapus tugas ini?')) {
+            tasks = tasks.filter(t => t.id !== selectedTaskId);
+            saveTasks();
+            renderTasks();
+            taskDetailPanel.classList.remove('active');
+            formOverlay.classList.remove('active');
+            selectedTaskId = null;
+        }
+    });
+}
 
 // Handle form submission
 todoForm.addEventListener('submit', (e) => {
@@ -92,6 +151,7 @@ todoForm.addEventListener('submit', (e) => {
     // Get form values
     const taskName = document.getElementById('taskName').value;
     const taskDesc = document.getElementById('taskDesc').value;
+    const taskType = document.getElementById('taskType').value;
     const dueDate = document.getElementById('dueDate').value;
     
     // Create task object
@@ -99,6 +159,7 @@ todoForm.addEventListener('submit', (e) => {
         id: Date.now(),
         name: taskName,
         description: taskDesc,
+        category: taskType,
         dueDate: dueDate,
         completed: false,
         createdAt: new Date().toISOString()
@@ -115,8 +176,7 @@ todoForm.addEventListener('submit', (e) => {
     
     // Reset form and hide
     todoForm.reset();
-    taskForm.classList.remove('active');
-    formOverlay.classList.remove('active');
+    closeAllPanels();
 });
 
 // Render tasks
@@ -151,7 +211,9 @@ function renderTasks() {
     }
     
     tasksList.innerHTML = filteredTasks.map(task => `
-        <div class="task-item ${task.completed ? 'completed' : ''}" data-id="${task.id}">
+        <div class="task-item ${task.completed ? 'completed' : ''}"
+     data-id="${task.id}"
+     onclick="openTaskDetail(${task.id})">
             <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
             
             <div class="task-details">
@@ -159,6 +221,7 @@ function renderTasks() {
                 ${task.description ? `<div class="task-desc">${task.description}</div>` : ''}
                 
                 <div class="task-meta">
+                    ${task.category ? `<span class="task-type">${task.category}</span>` : ''}
                     ${task.dueDate ? `<span>📅 ${formatDate(task.dueDate)}</span>` : ''}
                 </div>
             </div>
@@ -193,6 +256,32 @@ function deleteTask(id) {
 function formatDate(dateString) {
     const date = new Date(dateString);
     const options = { day: 'numeric', month: 'short', year: 'numeric' };
+    return date.toLocaleDateString('id-ID', options);
+}
+
+// Format date time
+function formatDateTime(dateString) {
+    const date = new Date(dateString);
+    const options = { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    return date.toLocaleDateString('id-ID', options);
+}
+
+// Format date time
+function formatDateTime(dateString) {
+    const date = new Date(dateString);
+    const options = { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
     return date.toLocaleDateString('id-ID', options);
 }
 
@@ -306,4 +395,23 @@ function showTasksForDate(dateString, tasksForDay) {
     ).join('\n');
     
     alert(`Tasks for ${formatDate(dateString)}:\n\n${taskList}`);
+}
+
+function openTaskDetail(id) {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+
+    selectedTaskId = id;
+
+    detailName.textContent = task.name;
+    detailDate.textContent = task.dueDate
+        ? formatDate(task.dueDate)
+        : '-';
+
+    detailStatus.textContent = task.completed
+        ? 'Completed'
+        : 'Uncompleted';
+
+    taskDetailPanel.classList.add('active');
+    formOverlay.classList.add('active');
 }
