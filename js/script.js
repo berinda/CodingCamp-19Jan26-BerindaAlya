@@ -11,6 +11,7 @@ const calendarTitle = document.getElementById('calendarTitle');
 const prevMonthBtn = document.getElementById('prevMonth');
 const nextMonthBtn = document.getElementById('nextMonth');
 const formOverlay = document.getElementById('formOverlay');
+const workBtn = document.getElementById('workBtn');
 
 // Tasks array
 let tasks = [];

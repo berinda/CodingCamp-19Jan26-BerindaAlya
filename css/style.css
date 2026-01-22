@@ -89,6 +89,55 @@ body {
     height: 18px;
 }
 
+.work-btn {
+   background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s;
+}
+
+.work-btn:hover {
+background: rgba(255, 255, 255, 0.3);}
+
+.work-btn svg {
+    font-size: 20px;
+}
+
+.personal-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+.personal-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.personal-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
 /* Main Content Styles */
 .main-content {
     flex: 1;
