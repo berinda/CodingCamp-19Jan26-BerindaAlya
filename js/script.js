@@ -3,13 +3,21 @@ const addTaskBtn = document.getElementById('addTaskBtn');
 const taskForm = document.getElementById('taskForm');
 const todoForm = document.getElementById('todoForm');
 const tasksList = document.getElementById('tasksList');
+const filterSelect = document.getElementById('filterSelect');
 
 // Tasks array
 let tasks = [];
+let currentFilter = 'all';
 
 // Load tasks from localStorage on page load
 window.addEventListener('DOMContentLoaded', () => {
     loadTasks();
+    renderTasks();
+});
+
+// Filter change event
+filterSelect.addEventListener('change', (e) => {
+    currentFilter = e.target.value;
     renderTasks();
 });
 
@@ -30,7 +38,6 @@ todoForm.addEventListener('submit', (e) => {
     // Get form values
     const taskName = document.getElementById('taskName').value;
     const taskDesc = document.getElementById('taskDesc').value;
-    // const taskType = document.getElementById('taskType').value;
     const dueDate = document.getElementById('dueDate').value;
     
     // Create task object
@@ -38,7 +45,6 @@ todoForm.addEventListener('submit', (e) => {
         id: Date.now(),
         name: taskName,
         description: taskDesc,
-        type: taskType,
         dueDate: dueDate,
         completed: false,
         createdAt: new Date().toISOString()
@@ -60,19 +66,36 @@ todoForm.addEventListener('submit', (e) => {
 
 // Render tasks
 function renderTasks() {
-    if (tasks.length === 0) {
+    // Filter tasks based on current filter
+    let filteredTasks = tasks;
+    
+    if (currentFilter === 'completed') {
+        filteredTasks = tasks.filter(task => task.completed);
+    } else if (currentFilter === 'uncompleted') {
+        filteredTasks = tasks.filter(task => !task.completed);
+    }
+    
+    if (filteredTasks.length === 0) {
+        let emptyMessage = 'Belum ada tugas. Klik "Add New Tasks" untuk menambahkan.';
+        
+        if (currentFilter === 'completed') {
+            emptyMessage = 'Belum ada tugas yang diselesaikan.';
+        } else if (currentFilter === 'uncompleted') {
+            emptyMessage = 'Tidak ada tugas yang belum diselesaikan.';
+        }
+        
         tasksList.innerHTML = `
             <div class="empty-state">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
-                <p>Belum ada tugas. Klik "Add New Tasks" untuk menambahkan.</p>
+                <p>${emptyMessage}</p>
             </div>
         `;
         return;
     }
     
-    tasksList.innerHTML = tasks.map(task => `
+    tasksList.innerHTML = filteredTasks.map(task => `
         <div class="task-item ${task.completed ? 'completed' : ''}" data-id="${task.id}">
             <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask(${task.id})">
             
@@ -81,7 +104,6 @@ function renderTasks() {
                 ${task.description ? `<div class="task-desc">${task.description}</div>` : ''}
                 
                 <div class="task-meta">
-                    ${task.type ? `<span class="task-type">${task.type}</span>` : ''}
                     ${task.dueDate ? `<span>📅 ${formatDate(task.dueDate)}</span>` : ''}
                 </div>
             </div>
