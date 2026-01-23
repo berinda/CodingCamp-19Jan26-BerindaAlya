@@ -5,189 +5,172 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To-Do List</title>
     <!-- IBM Plex Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- Main Content -->
 <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo" id="homeBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                    <path d="M9 12l2 2 4-4"/>
-                </svg>
-                <span>To-Do List</span>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo" id="homeBtn">
+    <img src="assets/Logo.png" alt="To-Do List Logo" class="logo-img">
+</div>
+        
+        <button class="add-task-btn" id="addTaskBtn">
+            <span>+</span> Add New Tasks
+        </button>
+
+        <button class="calendar-btn" id="calendarBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            Calendar View
+        </button>
+
+        <br><br>
+
+        <h3>Category</h3>
+
+        <button class="work-btn" id="workBtn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M23 5v14q0 .825-.587 1.413T21 21h-3q-.425 0-.712-.288T17 20t.288-.712T18 19h3V5h-9v.5q0 .425-.288.713T11 6.5t-.712-.288T10 5.5v-.55q0-.8.575-1.375T11.95 3H21q.825 0 1.413.588T23 5M1 12.025q0-.5.225-.925t.625-.7l5-3.575q.275-.2.563-.288T8 6.45t.588.088t.562.287l5 3.575q.4.275.625.7t.225.925V19q0 .825-.587 1.413T13 21h-2q-.825 0-1.412-.587T9 19v-3H7v3q0 .825-.587 1.413T5 21H3q-.825 0-1.412-.587T1 19zM3 12v7h2v-3q0-.825.588-1.412T7 14h2q.825 0 1.413.588T11 16v3h2v-7L8 8.45zm8 7v-5H5v5v-5h6zm6.5-10h1q.2 0 .35-.15T19 8.5v-1q0-.2-.15-.35T18.5 7h-1q-.2 0-.35.15T17 7.5v1q0 .2.15.35t.35.15m0 4h1q.2 0 .35-.15t.15-.35v-1q0-.2-.15-.35T18.5 11h-1q-.2 0-.35.15t-.15.35v1q0 .2.15.35t.35.15m0 4h1q.2 0 .35-.15t.15-.35v-1q0-.2-.15-.35T18.5 15h-1q-.2 0-.35.15t-.15.35v1q0 .2.15.35t.35.15"/>
+            </svg>
+            Work
+        </button>
+
+        <button class="personal-btn" id="personalBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            Personal
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Navbar -->
+        <div class="navbar">
+            <h1 class="header">Today</h1>
+            <div class="filter-container">
+                <select id="filterSelect" class="filter-select" title="Filter tasks by status">
+                    <option value="all">All</option>
+                    <option value="uncompleted">Uncompleted</option>
+                    <option value="completed">Completed</option>
+                </select>
             </div>
-            
-            <button class="add-task-btn" id="addTaskBtn">
-                <span>+</span> Add New Tasks
-            </button>
-
-            
-            <button class="calendar-btn" id="calendarBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                    <line x1="16" y1="2" x2="16" y2="6"></line>
-                    <line x1="8" y1="2" x2="8" y2="6"></line>
-                    <line x1="3" y1="10" x2="21" y2="10"></line>
-                </svg>
-                Calendar View
-            </button><br><br>
-
-            <h3>Category</h3><br>
-
-            <button class="work-btn" id="workBtn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M23 5v14q0 .825-.587 1.413T21 21h-3q-.425 0-.712-.288T17 20t.288-.712T18 19h3V5h-9v.5q0 .425-.288.713T11 6.5t-.712-.288T10 5.5v-.55q0-.8.575-1.375T11.95 3H21q.825 0 1.413.588T23 5M1 12.025q0-.5.225-.925t.625-.7l5-3.575q.275-.2.563-.288T8 6.45t.588.088t.562.287l5 3.575q.4.275.625.7t.225.925V19q0 .825-.587 1.413T13 21h-2q-.825 0-1.412-.587T9 19v-3H7v3q0 .825-.587 1.413T5 21H3q-.825 0-1.412-.587T1 19zM3 12v7h2v-3q0-.825.588-1.412T7 14h2q.825 0 1.413.588T11 16v3h2v-7L8 8.45zm8 7v-5H5v5v-5h6zm6.5-10h1q.2 0 .35-.15T19 8.5v-1q0-.2-.15-.35T18.5 7h-1q-.2 0-.35.15T17 7.5v1q0 .2.15.35t.35.15m0 4h1q.2 0 .35-.15t.15-.35v-1q0-.2-.15-.35T18.5 11h-1q-.2 0-.35.15t-.15.35v1q0 .2.15.35t.35.15m0 4h1q.2 0 .35-.15t.15-.35v-1q0-.2-.15-.35T18.5 15h-1q-.2 0-.35.15t-.15.35v1q0 .2.15.35t.35.15"/>
-                </svg>
-                Work
-            </button>
-
-            <button class="personal-btn" id="personalBtn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-                Personal
-            </button>
         </div>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Navbar -->
-            <div class="navbar">
-                <h1 class="header">Today</h1>
-                <div class="filter-container">
-                    <select id="filterSelect" class="filter-select" title="Filter tasks by status">
-                        <option value="all">All</option>
-                        <option value="uncompleted">Uncompleted</option>
-                        <option value="completed">Completed</option>
+        <!-- Overlay -->
+        <div class="form-overlay" id="formOverlay"></div>
+
+        <!-- Task Form -->
+        <div class="task-form" id="taskForm">
+            <h2 class="form-title">Add New Task</h2>
+            
+            <form id="todoForm">
+                <div class="form-group">
+                    <label for="taskName">Task:</label>
+                    <input type="text" id="taskName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskDesc">Description:</label>
+                    <textarea id="taskDesc"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="taskType">Category</label>
+                    <select id="taskType">
+                        <option value="">Select Category</option>
+                        <option value="Work">Working Task</option>
+                        <option value="Personal">Personal</option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="dueDate">Due Date:</label>
+                    <input type="date" id="dueDate">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">Save</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Task Detail Panel -->
+        <div class="task-detail-panel" id="taskDetailPanel">
+            <div class="detail-header">
+                <h2 class="detail-title">Task Details</h2>
+                <button class="close-detail-btn" id="closeDetailBtn">×</button>
             </div>
+            
+            <div class="detail-content">
+                <div class="detail-section">
+                    <label>Task Name:</label>
+                    <h3 class="detail-task-name" id="detailName"></h3>
+                </div>
 
-            <!-- Overlay -->
-            <div class="form-overlay" id="formOverlay"></div>
+                <div class="detail-section">
+                    <label>Description:</label>
+                    <p class="detail-task-desc" id="detailDesc"></p>
+                </div>
 
-            <!-- Task Form (Hidden by default) -->
-            <div class="task-form" id="taskForm">
-                <h2 class="form-title">Add New Task</h2>
-                
-                <form id="todoForm">
-                    <div class="form-group">
-                        <label for="taskName">Task:</label>
-                        <input type="text" id="taskName" required>
-                    </div>
+                <div class="detail-section">
+                    <label>Category:</label>
+                    <span class="detail-category" id="detailCategory"></span>
+                </div>
 
-                    <div class="form-group">
-                        <label for="taskDesc">Description:</label>
-                        <textarea id="taskDesc"></textarea>
-                    </div>
+                <div class="detail-section">
+                    <label>Due Date:</label>
+                    <p class="detail-due-date" id="detailDate"></p>
+                </div>
 
-                    <div class="form-group">
-                        <label for="taskType">Category</label>
-                        <select id="taskType">
-                            <option value="">Select Category</option>
-                            <option value="Work">Working Task</option>
-                            <option value="Personal">Personal</option>
-                        </select>
-                    </div>
+                <div class="detail-section">
+                    <label>Status:</label>
+                    <p class="detail-status" id="detailStatus"></p>
+                </div>
 
-                    <div class="form-group">
-                        <label for="dueDate">Due Date:</label>
-                        <input type="date" id="dueDate">
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="save-btn">Save</button>
-                    </div>
-                </form>
+                <div class="detail-section">
+                    <label>Created At:</label>
+                    <p class="detail-created" id="detailCreated"></p>
+                </div>
             </div>
+        </div>
 
-            <!-- Tasks List -->
-            <div class="tasks-list" id="tasksList"></div>
+        <!-- Tasks List -->
+        <div class="tasks-list" id="tasksList"></div>
 
-           <div class="task-detail-panel" id="taskDetailPanel">
-                <div class="detail-header">
-                    <h2 class="detail-title">Task Details</h2>
-                    <button class="close-detail-btn" id="closeDetailBtn">×</button>
-                </div>
-                
-                <div class="detail-content">
-                    <div class="detail-section">
-                        <label>Task Name:</label>
-                        <h3 class="detail-task-name" id="detailName"></h3>
-                    </div>
-
-                    <div class="detail-section">
-                        <label>Description:</label>
-                        <p class="detail-task-desc" id="detailDesc"></p>
-                    </div>
-
-                    <div class="detail-section">
-                        <label>Category:</label>
-                        <span class="detail-category" id="detailCategory"></span>
-                    </div>
-
-                    <div class="detail-section">
-                        <label>Due Date:</label>
-                        <p class="detail-due-date" id="detailDate"></p>
-                    </div>
-
-                    <div class="detail-section">
-                        <label>Status:</label>
-                        <p class="detail-status" id="detailStatus"></p>
-                    </div>
-
-                    <div class="detail-section">
-                        <label>Created At:</label>
-                        <p class="detail-created" id="detailCreated"></p>
-                    </div>
-                </div>
-
-                <!-- <div class="detail-actions">
-                    <button class="delete-task-btn" id="deleteTaskDetailBtn">Delete Task</button>
-                </div>
-            </div> -->
-
-            <!-- TASK DETAIL PANEL -->
-<!-- <div class="task-detail-panel" id="taskDetailPanel">
-    <button class="close-detail-btn" id="closeDetailBtn">×</button>
-
-    <h3 class="detail-task-name" id="detailName"></h3>
-    <p class="detail-task-desc" id="detailDesc"></p>
-
-    <span class="detail-category" id="detailCategory"></span>
-
-    <p class="detail-due-date" id="detailDate"></p>
-    <p class="detail-status" id="detailStatus"></p>
-    <p class="detail-created" id="detailCreated"></p>
-</div> -->
-
-            <!-- Calendar View (Hidden by default) -->
-            <div class="calendar-view" id="calendarView">
-                <div class="calendar-header">
-                    <button class="calendar-nav" id="prevMonth">&lt;</button>
-                    <h2 class="calendar-title" id="calendarTitle"></h2>
-                    <button class="calendar-nav" id="nextMonth">&gt;</button>
-                </div>
-                <div class="calendar-weekdays">
-                    <div>Sun</div>
-                    <div>Mon</div>
-                    <div>Tue</div>
-                    <div>Wed</div>
-                    <div>Thu</div>
-                    <div>Fri</div>
-                    <div>Sat</div>
-                </div>
-                <div class="calendar-days" id="calendarDays"></div>
+        <!-- Calendar View -->
+        <div class="calendar-view" id="calendarView">
+            <div class="calendar-header">
+                <button class="calendar-nav" id="prevMonth">&lt;</button>
+                <h2 class="calendar-title" id="calendarTitle">January 2025</h2>
+                <button class="calendar-nav" id="nextMonth">&gt;</button>
+            </div>
+            <div class="calendar-weekdays">
+                <div>Sunday</div>
+                <div>Monday</div>
+                <div>Tuesday</div>
+                <div>Wednesday</div>
+                <div>Thusday</div>
+                <div>Friday</div>
+                <div>Saturday</div>
+            </div>
+            <div class="calendar-days" id="calendarDays">
+                <!-- Calendar days will be rendered here -->
             </div>
         </div>
     </div>
+</div>
 
-    <script src="js/script.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>
