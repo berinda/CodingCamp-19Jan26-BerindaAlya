@@ -56,21 +56,16 @@
     <!-- Main Content -->
     <div class="main-content">
         <!-- Navbar -->
-        <nav class="top-navbar">
-    <div class="top-navbar-left">
-        <img src="assets/Logo.png" alt="Logo" class="top-navbar-logo">
-        <span class="top-navbar-title">To-Do List Application</span>
-    </div>
-    <div class="top-navbar-right">
-        <button class="top-navbar-btn" id="profileBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-            </svg>
-            Profile
-        </button>
-    </div>
-</nav>
+        <div class="navbar">
+            <h1 class="header">Today</h1>
+            <div class="filter-container">
+                <select id="filterSelect" class="filter-select" title="Filter tasks by status">
+                    <option value="all">All</option>
+                    <option value="uncompleted">Uncompleted</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+        </div>
 
         <!-- Overlay -->
         <div class="form-overlay" id="formOverlay"></div>
