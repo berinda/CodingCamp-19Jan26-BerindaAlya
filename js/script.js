@@ -75,15 +75,14 @@ filterSelect.addEventListener('change', (e) => {
 // Calendar button click
 calendarBtn.addEventListener('click', () => {
     closeAllPanels();
+    formOverlay.classList.remove('active'); // 🔥 WAJIB
 
     if (viewMode === 'list') {
         viewMode = 'calendar';
         tasksList.style.display = 'none';
         calendarView.classList.add('active');
         
-        // Hide navbar
         document.querySelector('.navbar').style.display = 'none';
-        // Add class to main-content
         document.querySelector('.main-content').classList.add('calendar-mode');
         
         renderCalendar();
@@ -92,9 +91,7 @@ calendarBtn.addEventListener('click', () => {
         tasksList.style.display = 'grid';
         calendarView.classList.remove('active');
         
-        // Show navbar again
         document.querySelector('.navbar').style.display = 'flex';
-        // Remove class from main-content
         document.querySelector('.main-content').classList.remove('calendar-mode');
     }
 });
